@@ -6,6 +6,7 @@ import gym
 from pipcs import Config
 import torch
 from torch import nn
+import numpy as np
 
 from nes import NES, Policy, default_config
 
@@ -49,7 +50,11 @@ def after_optimize_hook(self):
     n_rollout = self.config.nes.n_rollout
     for _ in range(n_rollout):
         total_reward += self.eval_policy(self.policy)
-    print(f'Gen: {self.gen} Test Reward: {total_reward/n_rollout}')
+    total_reward /= n_rollout
+    if total_reward > self.config.user_variables.best_reward:
+        self.config.user_variables.best_reward = total_reward
+    best_reward = self.config.user_variables.best_reward
+    print(f'Gen: {self.gen} Test Reward: {total_reward} Best Reward: {best_reward}')
 
 
 config = Config(default_config)
@@ -88,12 +93,21 @@ class NESConfig():
     n_rollout = 5
     n_step = 500
     l2_decay = 0.005
-    evolution_population = 256
+    population_size = 256
     sigma = 0.02
     seed = 123123
     after_optimize_hook = after_optimize_hook
 
 
+@config('user_variables')
+class UserVariables():
+    """Users can initialize variables as config to use in the hook function."""
+    best_reward: float = -np.inf
+
+
 if __name__ == '__main__':
     nes = NES(config)
     nes.train()
+
+    # Evaluate trained policy
+    print(f'Reward: {nes.eval_policy(nes.policy)}')
