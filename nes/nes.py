@@ -76,7 +76,7 @@ class NES():
         return policy(**kwargs).to(device)
 
     def make_optimizer(self, policy, optim_type, lr, **kwargs):
-        """Helper function to create a optimizer."""
+        """Helper function to create an optimizer."""
         return optim_type(policy.parameters(), lr=lr, **kwargs)
 
     def eval_policy(self, policy):
