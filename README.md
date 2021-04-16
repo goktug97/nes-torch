@@ -9,7 +9,6 @@ numpy
 torch
 gym
 mpi4py
-box2d-py
 ```
 
 To install `mpi4py` you need `MPI` installed in the system.

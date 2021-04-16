@@ -8,7 +8,7 @@ with open(os.path.join(directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(name='nes-torch',
-      version=f'0.0.2',
+      version=f'0.0.3',
       description='Minimal PyTorch Library for Natural Evolution Strategies',
       author='Göktuğ Karakaşlı',
       author_email='karakasligk@gmail.com',
@@ -26,8 +26,6 @@ setup(name='nes-torch',
           'torch',
           'gym',
           'pipcs',
-          'mpi4py',
-          'box2d-py'
-          ],
+          'mpi4py'],
       python_requires='>=3.7',
       include_package_data=True)
