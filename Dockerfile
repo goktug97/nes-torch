@@ -16,13 +16,6 @@ RUN mkdir /tmp/openmpi && \
 
 RUN apt-get -y update && apt-get install -y ssh zlib1g-dev libjpeg-dev swig
 
-RUN python -m pip install 'numpy==1.20.1'
-RUN python -m pip install 'torch==1.8.0'
-RUN python -m pip install 'gym==0.18.0'
-RUN python -m pip install 'pipcs==1.3.2'
-RUN python -m pip install 'mpi4py==3.0.3'
-RUN python -m pip install 'box2d-py==2.3.8'
-
 WORKDIR /nes
 
 COPY requirements.txt requirements.txt
