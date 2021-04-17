@@ -46,15 +46,11 @@ class Agent(Policy):
 
 
 def after_optimize_hook(self):
-    total_reward = 0
-    n_rollout = self.config.nes.n_rollout
-    for _ in range(n_rollout):
-        total_reward += self.eval_policy(self.policy)
-    total_reward /= n_rollout
-    if total_reward > self.config.user_variables.best_reward:
-        self.config.user_variables.best_reward = total_reward
+    reward = self.eval_policy(self.policy)
+    if reward > self.config.user_variables.best_reward:
+        self.config.user_variables.best_reward = reward
     best_reward = self.config.user_variables.best_reward
-    print(f'Gen: {self.gen} Test Reward: {total_reward} Best Reward: {best_reward}')
+    print(f'Gen: {self.gen} Test Reward: {reward} Best Reward: {best_reward}')
 
 
 config = Config(default_config)
