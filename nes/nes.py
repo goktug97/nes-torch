@@ -77,9 +77,9 @@ class NES():
         assert issubclass(policy, Policy)
         return policy(**kwargs).to(device)
 
-    def make_optimizer(self, policy, optim_type, lr, **kwargs):
+    def make_optimizer(self, policy, optim_type, **kwargs):
         """Helper function to create an optimizer."""
-        return optim_type(policy.parameters(), lr=lr, **kwargs)
+        return optim_type(policy.parameters(), **kwargs)
 
     def eval_policy(self, policy):
         """Evaluate policy on the ``self.env`` for ``self.config.nes.n_rollout times``"""
