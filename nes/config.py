@@ -48,7 +48,8 @@ class OptimizerConfig():
 class NESConfig():
     """**name: nes**
 
-    :ivar int population_size: Population Size, higher means lower variance in gradient calculation but higher memory consumption.
+    :ivar int population_size: Population Size, higher means lower variance in
+    gradient calculation but higher memory consumption and longer training time.
     :ivar int n_step: Number of training steps
     :ivar float sigma: Standart deviation for population sampling
     :ivar int n_rollout: Number of episodes per sampled policy.

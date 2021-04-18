@@ -40,7 +40,9 @@ class Policy(nn.Module, ABC):
 
     @abstractmethod
     def rollout(self, env):
-        """This function should be implemented by the user and it should evaluate the model in the given environment and return the total reward."""
+        """This function should be implemented by the user and
+        it should evaluate the model in the given environment and
+        return the total reward."""
         pass
 
 
@@ -87,7 +89,8 @@ class NES():
         return total_reward / self.config.nes.n_rollout
 
     def train(self):
-        """Train ``self.policy`` for ``self.config.nes.n_steps`` to increase reward returns from the ``self.env`` using Natural Evolution Strategy gradient estimation."""
+        """Train ``self.policy`` for ``self.config.nes.n_steps`` to increase reward returns
+        from the ``self.env`` using Natural Evolution Strategy gradient estimation."""
         torch.set_grad_enabled(False)
         comm = MPI.COMM_WORLD
         n_workers = comm.Get_size()
