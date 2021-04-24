@@ -1,4 +1,4 @@
-from typing import Optional, Type, Callable
+from typing import Optional, Type, Callable, Any
 
 import torch
 from pipcs import Config, Required, required
@@ -17,9 +17,9 @@ default_config = Config()
 class EnvironmentConfig():
     """**name: environment**
 
-    :ivar str id: Gym environment id
+    :ivar Callable[[Any], gym.Env] id: Function that returns a gym environment
     """
-    id: Required['str'] = required
+    make_env: Required[Callable[[Any], 'gym.Env']] = required
 
 
 @default_config('policy')

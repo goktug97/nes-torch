@@ -56,15 +56,20 @@ def after_optimize_hook(self):
 config = Config(default_config)
 
 
+def make_env(id):
+    return gym.make(id)
+
+
 @config('environment')
 class EnvironmentConfig():
-    id = 'LunarLander-v2'
+    make_env = make_env
+    id: str = 'LunarLander-v2'
 
 
 @config('policy')
 class PolicyConfig():
     policy = Agent
-    env = gym.make(config.environment.id)
+    env = NES.make_env(**config.environment.to_dict())
     input_size: int = env.observation_space.shape[0]
     if isinstance(env.action_space, gym.spaces.Discrete):
         output_size: int = env.action_space.n

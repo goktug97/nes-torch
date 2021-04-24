@@ -63,7 +63,7 @@ class NES():
         torch.cuda.manual_seed_all(config.nes.seed)
         torch.backends.cudnn.benchmark = False
         torch.backends.cudnn.deterministic = True
-        self.env = gym.make(**config.environment.to_dict())
+        self.env = self.make_env(**config.environment.to_dict())
         self.env.seed(config.nes.seed)
         self.env.action_space.seed(config.nes.seed)
 
@@ -72,12 +72,19 @@ class NES():
         self.policy = self.make_policy(**config.policy.to_dict())
         self.optim = self.make_optimizer(policy=self.policy, **config.optimizer.to_dict())
 
-    def make_policy(self, policy, device, **kwargs):
+    @staticmethod
+    def make_env(make_env, **kwargs):
+        """Helper function to create a gym environment."""
+        return make_env(**kwargs)
+
+    @staticmethod
+    def make_policy(policy, device, **kwargs):
         """Helper function to create a policy."""
         assert issubclass(policy, Policy)
         return policy(**kwargs).to(device)
 
-    def make_optimizer(self, policy, optim_type, **kwargs):
+    @staticmethod
+    def make_optimizer(policy, optim_type, **kwargs):
         """Helper function to create an optimizer."""
         return optim_type(policy.parameters(), **kwargs)
 
