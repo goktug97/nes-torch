@@ -45,13 +45,6 @@ class Agent(Policy):
         return total_reward
 
 
-def after_optimize_hook(self):
-    reward = self.eval_policy(self.policy)
-    if reward > self.config.user_variables.best_reward:
-        self.config.user_variables.best_reward = reward
-    best_reward = self.config.user_variables.best_reward
-    print(f'Gen: {self.gen} Test Reward: {reward} Best Reward: {best_reward}')
-
 
 config = Config(default_config)
 
@@ -97,17 +90,22 @@ class NESConfig():
     population_size = 256
     sigma = 0.02
     seed = 123123
-    after_optimize_hook = after_optimize_hook
-
-
-@config('user_variables')
-class UserVariables():
-    """Users can initialize variables as config to use in the hook function."""
-    best_reward: float = -np.inf
 
 
 if __name__ == '__main__':
+    @NES.__init__.add_hook()
+    def init(self, *args, **kwargs):
+        self.best_reward = -np.inf
+
     nes = NES(config)
+
+    @nes.optimize.add_hook()
+    def after_optimize(self, *args, **kwargs):
+        reward = self.eval_policy(self.policy)
+        if reward > self.best_reward:
+            self.best_reward = reward
+        print(f'Gen: {self.gen} Test Reward: {reward} Best Reward: {self.best_reward}')
+
     nes.train()
 
     # Evaluate trained policy

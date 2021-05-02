@@ -6,10 +6,6 @@ from pipcs import Config, Required, required
 from .nes import Policy, NES
 
 
-def after_optimize_hook(self):
-    pass
-
-
 default_config = Config()
 
 
@@ -27,10 +23,8 @@ class PolicyConfig():
     """**name: policy**
 
     :ivar Required[Type[Policy]] policy: torch.nn.Module with a rollout method
-    :ivar str device: torch device
     """
     policy: Required[Type[Policy]] = required
-    device: str = 'cpu'
 
 
 @default_config('optimizer')
@@ -54,7 +48,6 @@ class NESConfig():
     :ivar float sigma: Standart deviation for population sampling
     :ivar int n_rollout: Number of episodes per sampled policy.
     :ivar Optional[int] seed: Random seed
-    :ivar Callable[[NES],None] after_optimize_hook: Executed after optim.step()
     """
     n_rollout: int = 1
     n_step: Required[int] = required
@@ -62,4 +55,3 @@ class NESConfig():
     population_size: Required[int] = required
     sigma: float = 0.02
     seed: Optional[int] = None
-    after_optimize_hook: Callable[[NES], None] = after_optimize_hook
