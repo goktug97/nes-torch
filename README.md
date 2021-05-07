@@ -27,6 +27,7 @@ https://nestorch.readthedocs.io/
 
 # Usage
 See https://github.com/goktug97/nes-torch/blob/master/example.py
+https://github.com/goktug97/nes-torch/blob/master/minimal_example.py
 
 Check https://github.com/goktug97/pipcs to understand the configuration system.
 
