@@ -1,9 +1,7 @@
 Minimal PyTorch Library for Natural Evolution Strategies
 ========================================================
 <p align="middle">
-    <img src="/gifs/lunarlander_ep1.gif" width="32%" />
-    <img src="/gifs/lunarlander_ep2.gif" width="32%" /> 
-    <img src="/gifs/lunarlander_overlay.gif" width="32%" />
+    <img src="/gifs/lunarlander.gif" width="100%" />
 </p>
 
 
