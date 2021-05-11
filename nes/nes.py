@@ -37,16 +37,17 @@ class NES():
         config.check_config()
         self.config = config
 
-        torch.manual_seed(config.nes.seed)
-        np.random.seed(config.nes.seed)
-        random.seed(config.nes.seed)
-        torch.cuda.manual_seed(config.nes.seed)
-        torch.cuda.manual_seed_all(config.nes.seed)
-        torch.backends.cudnn.benchmark = False
-        torch.backends.cudnn.deterministic = True
-        self.env = self.make_env(**config.environment.to_dict())
-        self.env.seed(config.nes.seed)
-        self.env.action_space.seed(config.nes.seed)
+        if config.nes.seed is not None:
+            torch.manual_seed(config.nes.seed)
+            np.random.seed(config.nes.seed)
+            random.seed(config.nes.seed)
+            torch.cuda.manual_seed(config.nes.seed)
+            torch.cuda.manual_seed_all(config.nes.seed)
+            torch.backends.cudnn.benchmark = False
+            torch.backends.cudnn.deterministic = True
+            self.env = self.make_env(**config.environment.to_dict())
+            self.env.seed(config.nes.seed)
+            self.env.action_space.seed(config.nes.seed)
 
         self.gen = 0
 
