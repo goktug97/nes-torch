@@ -111,7 +111,6 @@ class NES():
 
     @hook
     def optimize(self, grad):
-        self.optim.zero_grad()
         index = 0
         for parameter in self.policy.parameters():
             size = np.prod(parameter.shape)
