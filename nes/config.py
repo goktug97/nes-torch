@@ -9,15 +9,6 @@ from .nes import Policy, NES
 default_config = Config()
 
 
-@default_config('environment')
-class EnvironmentConfig():
-    """**name: environment**
-
-    :ivar Callable[[Any], gym.Env] id: Function that returns a gym environment
-    """
-    make_env: Required[Callable[[Any], 'gym.Env']] = required
-
-
 @default_config('policy')
 class PolicyConfig():
     """**name: policy**
@@ -46,10 +37,8 @@ class NESConfig():
         gradient calculation but higher memory consumption and longer training time.
     :ivar int n_step: Number of training steps
     :ivar float sigma: Standart deviation for population sampling
-    :ivar int n_rollout: Number of episodes per sampled policy.
     :ivar Optional[int] seed: Random seed
     """
-    n_rollout: int = 1
     n_step: Required[int] = required
     l2_decay: float = 0.005
     population_size: Required[int] = required

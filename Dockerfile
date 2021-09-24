@@ -23,6 +23,8 @@ COPY requirements.txt requirements.txt
 RUN python -m pip install -r requirements.txt
 
 RUN python -m pip install "box2d-py==2.3.8"
+RUN python -m pip install "gym==0.18.0"
+RUN python -m pip install "mpi4py==3.0.3"
 
 COPY nes nes
 COPY example.py example.py

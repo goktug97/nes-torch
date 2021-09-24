@@ -6,9 +6,16 @@ from abc import ABC, abstractmethod
 import torch
 from torch import nn
 import numpy as np
-from mpi4py import MPI
-import gym
 from pipcs import Config
+
+try:
+    disable_mpi = os.environ.get('NESTORCH_DISABLE_MPI')
+    if disable_mpi and disable_mpi != '0':
+        raise ImportError
+    from mpi4py import MPI
+except ImportError:
+    from .MPI import MPI
+    MPI = MPI()
 
 from .utils import *
 
@@ -19,10 +26,9 @@ class Policy(nn.Module, ABC):
         super().__init__()
 
     @abstractmethod
-    def rollout(self, env):
-        """This function should be implemented by the user and
-        it should evaluate the model in the given environment and
-        return the total reward."""
+    def evaluate(self, env):
+        """This function should be implemented by the user and it
+        should evaluate the model and return reward or negative loss."""
         pass
 
 
@@ -37,32 +43,29 @@ class NES():
         config.check_config()
         self.config = config
 
-        if config.nes.seed is not None:
-            torch.manual_seed(config.nes.seed)
-            np.random.seed(config.nes.seed)
-            random.seed(config.nes.seed)
-            torch.cuda.manual_seed(config.nes.seed)
-            torch.cuda.manual_seed_all(config.nes.seed)
-            torch.backends.cudnn.benchmark = False
-            torch.backends.cudnn.deterministic = True
-            self.env = self.make_env(**config.environment.to_dict())
-            self.env.seed(config.nes.seed)
-            self.env.action_space.seed(config.nes.seed)
-
-        self.gen = 0
-
         comm = MPI.COMM_WORLD
         self.n_workers = comm.Get_size()
         self.rank = comm.Get_rank()
 
+        if config.nes.seed is not None:
+            seed = config.nes.seed
+        else:
+            seed = random.randint(0, 1000)
+            seed = comm.bcast(seed, root=0)
+
+        np.random.seed(seed)
+        random.seed(seed)
+        torch.manual_seed(seed)
+        torch.cuda.manual_seed(seed)
+        torch.cuda.manual_seed_all(seed)
+        torch.backends.cudnn.benchmark = False
+        torch.backends.cudnn.deterministic = True
+
+        self.gen = 0
+
         self.policy = self.make_policy(**config.policy.to_dict())
         self.optim = self.make_optimizer(policy=self.policy, **config.optimizer.to_dict())
         self.dummy_policy = self.make_policy(**self.config.policy.to_dict())
-
-    @staticmethod
-    def make_env(make_env, **kwargs):
-        """Helper function to create a gym environment."""
-        return make_env(**kwargs)
 
     @staticmethod
     def make_policy(policy, **kwargs):
@@ -74,13 +77,6 @@ class NES():
     def make_optimizer(policy, optim_type, **kwargs):
         """Helper function to create an optimizer."""
         return optim_type(policy.parameters(), **kwargs)
-
-    def eval_policy(self, policy):
-        """Evaluate policy on the ``self.env`` for ``self.config.nes.n_rollout times``"""
-        total_reward = 0
-        for _ in range(self.config.nes.n_rollout):
-            total_reward += policy.rollout(self.env)
-        return total_reward / self.config.nes.n_rollout
 
     @hook
     def sample(self, mean):
@@ -98,7 +94,7 @@ class NES():
         batch = np.array_split(population_params, self.n_workers)[self.rank]
         for param in batch:
             torch.nn.utils.vector_to_parameters(param, self.dummy_policy.parameters())
-            rewards.append(self.eval_policy(self.dummy_policy))
+            rewards.append(self.dummy_policy.evaluate())
         comm.Allgatherv([np.array(rewards, dtype=np.float32), MPI.FLOAT], [reward_array, MPI.FLOAT])
         return reward_array
 

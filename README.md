@@ -11,8 +11,12 @@ Minimal PyTorch Library for Natural Evolution Strategies
 pipcs
 numpy
 torch
-gym
-mpi4py
+```
+
+## Optional
+```
+gym # For gym examples
+mpi4py # For parallelization
 ```
 
 To install `mpi4py` you need `MPI` installed in the system.
@@ -30,8 +34,7 @@ pip install nes-torch --user
 https://nestorch.readthedocs.io/
 
 # Usage
-See https://github.com/goktug97/nes-torch/blob/master/example.py
-https://github.com/goktug97/nes-torch/blob/master/minimal_example.py
+See https://github.com/goktug97/nes-torch/blob/master/examples
 
 Check https://github.com/goktug97/pipcs to understand the configuration system.
 
@@ -39,9 +42,9 @@ Check documentation or https://github.com/goktug97/nes-torch/blob/master/nes/con
 
 You can run the example with
 ```bash
-python example.py
+PYTHONPATH="$(pwd):$PYTHONPATH" mpirun --np 2 python examples/example.py
 ```
 or in parallel for faster training.
 ```bash
-mpirun -np 2 python example.py
+PYTHONPATH="$(pwd):$PYTHONPATH" mpirun --np 2 python examples/example.py
 ```
