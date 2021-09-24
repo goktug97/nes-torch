@@ -42,7 +42,7 @@ Check documentation or https://github.com/goktug97/nes-torch/blob/master/nes/con
 
 You can run the example with
 ```bash
-PYTHONPATH="$(pwd):$PYTHONPATH" mpirun --np 2 python examples/example.py
+PYTHONPATH="$(pwd):$PYTHONPATH" python examples/example.py
 ```
 or in parallel for faster training.
 ```bash
