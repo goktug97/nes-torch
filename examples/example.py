@@ -1,14 +1,14 @@
-from typing import Callable, List, Optional
+from typing import Callable, List, Optional, Type
 from dataclasses import field
 from itertools import tee
 
 import gym
-from pipcs import Config
 import torch
 from torch import nn
 import numpy as np
 
-from nes import NES, Policy, default_config, hook
+from nes import NES, Policy, hook
+from nes.config import Config, default_config
 
 from modules import Agent
 
@@ -16,9 +16,18 @@ from modules import Agent
 config = Config(default_config)
 
 
+@config('nes')
+class NESConfig():
+    n_step: int = 300
+    l2_decay: float = 0.005
+    population_size: int = 256
+    sigma: float = 0.02
+    seed: int = 123123
+
+
 @config('policy')
 class PolicyConfig():
-    policy = Agent
+    policy: Type[Policy] = Agent
 
     # Below variables are user settings
     # they are passed to Agent as kwargs
@@ -34,17 +43,8 @@ class PolicyConfig():
 
 @config('optimizer')
 class OptimizerConfig():
-    lr = 0.02
-    optim_type = torch.optim.Adam
-
-
-@config('nes')
-class NESConfig():
-    n_step = 300
-    l2_decay = 0.005
-    population_size = 256
-    sigma = 0.02
-    seed = 123123
+    lr: float = 0.02
+    optim_type: torch.optim.Optimizer = torch.optim.Adam
 
 
 if __name__ == '__main__':

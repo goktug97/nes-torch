@@ -8,7 +8,6 @@ Minimal PyTorch Library for Natural Evolution Strategies
 # Requirements
 
 ```
-pipcs
 numpy
 torch
 ```
@@ -35,8 +34,6 @@ https://nestorch.readthedocs.io/
 
 # Usage
 See https://github.com/goktug97/nes-torch/blob/master/examples
-
-Check https://github.com/goktug97/pipcs to understand the configuration system.
 
 Check documentation or https://github.com/goktug97/nes-torch/blob/master/nes/config.py for parameters.
 

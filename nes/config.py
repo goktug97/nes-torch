@@ -1,7 +1,7 @@
 from typing import Optional, Type, Callable, Any
 
 import torch
-from pipcs import Config, Required, required
+from .dataclass_config import Config, Required
 
 from .nes import Policy, NES
 
@@ -15,7 +15,7 @@ class PolicyConfig():
 
     :ivar Required[Type[Policy]] policy: torch.nn.Module with a rollout method
     """
-    policy: Required[Type[Policy]] = required
+    policy: Required[Type[Policy]] = Required()
 
 
 @default_config('optimizer')
@@ -26,7 +26,7 @@ class OptimizerConfig():
     :ivar Required[Type[torch.optim.Optimizer]] optim_type: torch optim module
     """
     lr: float = 0.02
-    optim_type: Required[Type[torch.optim.Optimizer]] = required
+    optim_type: Required[Type[torch.optim.Optimizer]] = Required()
 
 
 @default_config('nes')
@@ -39,8 +39,8 @@ class NESConfig():
     :ivar float sigma: Standart deviation for population sampling
     :ivar Optional[int] seed: Random seed
     """
-    n_step: Required[int] = required
+    n_step: Required[int] = Required()
     l2_decay: float = 0.005
-    population_size: Required[int] = required
+    population_size: Required[int] = Required()
     sigma: float = 0.02
     seed: Optional[int] = None

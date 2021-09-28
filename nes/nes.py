@@ -6,7 +6,9 @@ from abc import ABC, abstractmethod
 import torch
 from torch import nn
 import numpy as np
-from pipcs import Config
+
+from .dataclass_config import Config, check_required
+
 
 try:
     disable_mpi = os.environ.get('NESTORCH_DISABLE_MPI')
@@ -40,15 +42,15 @@ class NES():
     """
     @hook
     def __init__(self, config: Config):
-        config.check_config()
-        self.config = config
+        check_required(config)
+        self.config = config.asdict()
 
         comm = MPI.COMM_WORLD
         self.n_workers = comm.Get_size()
         self.rank = comm.Get_rank()
 
-        if config.nes.seed is not None:
-            seed = config.nes.seed
+        if self.config.nes.seed is not None:
+            seed = self.config.nes.seed
         else:
             seed = random.randint(0, 1000)
             seed = comm.bcast(seed, root=0)
@@ -63,9 +65,9 @@ class NES():
 
         self.gen = 0
 
-        self.policy = self.make_policy(**config.policy.to_dict())
-        self.optim = self.make_optimizer(policy=self.policy, **config.optimizer.to_dict())
-        self.dummy_policy = self.make_policy(**self.config.policy.to_dict())
+        self.policy = self.make_policy(**self.config.policy)
+        self.optim = self.make_optimizer(policy=self.policy, **self.config.optimizer)
+        self.dummy_policy = self.make_policy(**self.config.policy)
 
     @staticmethod
     def make_policy(policy, **kwargs):

@@ -1,9 +1,11 @@
-from pipcs import Config
+from typing import Type
+
 import torch
 from torch import nn
 import numpy as np
 
 from nes import NES, Policy, default_config
+from nes.config import default_config, Config
 
 
 config = Config(default_config)
@@ -24,22 +26,22 @@ class Ackley(Policy):
 
 @config('policy')
 class PolicyConfig():
-    policy = Ackley
+    policy: Type[Policy] = Ackley
 
 
 @config('optimizer')
 class OptimizerConfig():
-    lr = 0.02
-    optim_type = torch.optim.Adam
+    lr: float = 0.02
+    optim_type: Type[torch.optim.Optimizer] = torch.optim.Adam
 
 
 @config('nes')
 class NESConfig():
-    n_step = 300
-    l2_decay = 0.0
-    population_size = 256
-    sigma = 0.2
-    seed = 123123
+    n_step: int = 300
+    l2_decay: float = 0.0
+    population_size: int = 256
+    sigma: float = 0.2
+    seed: int = 123123
 
 
 if __name__ == '__main__':
