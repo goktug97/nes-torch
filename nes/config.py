@@ -1,9 +1,9 @@
 from typing import Optional, Type, Callable, Any
 
 import torch
-from .dataclass_config import Config, Required
 
 from .nes import Policy, NES
+from .dataclass_config import *
 
 
 default_config = Config()
